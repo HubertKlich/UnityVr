@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using MySql.Data;
-using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Collections;
@@ -41,8 +39,8 @@ public class nowy : MonoBehaviour
         Menu.SetActive(true);
         Log.SetActive(false);
         Rej.SetActive(false);
-      
-        
+
+       
     }
 
     public void Logowanie()
@@ -79,9 +77,11 @@ public class nowy : MonoBehaviour
     }
     public void PrzejdzDoLogowania()
     {
+       
         Menu.SetActive(false);
         Log.SetActive(true);
-
+        GameObject.Find("Nick").GetComponent<TMP_InputField>().text = "Rupim";
+        GameObject.Find("Haslo").GetComponent<TMP_InputField>().text = "Szpagaciara1";
     }
     public void PrzejdzDoRejestracji()
     {
@@ -144,6 +144,7 @@ public class nowy : MonoBehaviour
                     string[] PodzielenieTablicy = dane.Split(char.Parse(" "));
                     Nick = PodzielenieTablicy[0];
                     x = PodzielenieTablicy[1];
+                    z = PodzielenieTablicy[3];
                     SceneManager.LoadScene(1);
 
                 }

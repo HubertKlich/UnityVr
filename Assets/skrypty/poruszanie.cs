@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 
 class Postac
 {
-    public String Nick, Haslo, Danex, y, z;
+    public String Nick, Haslo, Danex, Danez, y;
     public float dist = 0;
    
 }
@@ -55,10 +55,10 @@ public class poruszanie : MonoBehaviour
 
         KlasaGracza.Nick= nowy.Nick;
         KlasaGracza.Danex = nowy.x;
+        KlasaGracza.Danez = nowy.z;
         KlasaInnychGraczy.NazwaGracza = GameObject.Find("Nazwa");
         KlasaInnychGraczy.Kanwa = GameObject.Find("Canvas");
         TMP_Text Nazwa = KlasaInnychGraczy.NazwaGracza.GetComponent<TMP_Text>();
-
 
         if (KlasaGracza.Nick != null)
         {
@@ -66,7 +66,7 @@ public class poruszanie : MonoBehaviour
             Nazwa.name = KlasaGracza.Nick + "Tag";
             KlasaInnychGraczy.Gracz = GameObject.Find("Gracz");
             KlasaInnychGraczy.Gracz.name = KlasaGracza.Nick;
-            KlasaInnychGraczy.Gracz.transform.position = new Vector3(float.Parse(KlasaGracza.Danex), 0, 0);
+            KlasaInnychGraczy.Gracz.transform.position = new Vector3(float.Parse(KlasaGracza.Danex), 0, float.Parse(KlasaGracza.Danez));
             
         }
       
@@ -80,7 +80,7 @@ public class poruszanie : MonoBehaviour
         
         Ruch();
 
-        GameObject.Find("Kamera").transform.position = new Vector3(KlasaInnychGraczy.Gracz.transform.position.x, GameObject.Find("Kamera").transform.position.y, GameObject.Find("Kamera").transform.position.z);
+        GameObject.Find("Kamera").transform.position = new Vector3(KlasaInnychGraczy.Gracz.transform.position.x, GameObject.Find("Kamera").transform.position.y, KlasaInnychGraczy.Gracz.transform.position.z);
         KlasaInnychGraczy.NazwaGracza.transform.position = new Vector3(KlasaInnychGraczy.Gracz.transform.position.x, KlasaInnychGraczy.NazwaGracza.transform.position.y, KlasaInnychGraczy.NazwaGracza.transform.position.z);
         if (!KlasaZmiennych.Polaczenie)
         {
@@ -103,14 +103,25 @@ public class poruszanie : MonoBehaviour
        
             if (Input.GetKey(KeyCode.A))
             {
-            KlasaGracza.Danex = (KlasaInnychGraczy.Gracz.transform.position.x - 5).ToString();
+            GameObject.Find(KlasaGracza.Nick).transform.position -= GameObject.Find(KlasaGracza.Nick).transform.right * Time.deltaTime * 5;
         }
             if (Input.GetKey(KeyCode.D))
             {
-            KlasaGracza.Danex = (KlasaInnychGraczy.Gracz.transform.position.x +5).ToString();
-            }
-        
-        
+            GameObject.Find(KlasaGracza.Nick).transform.position += GameObject.Find(KlasaGracza.Nick).transform.right * Time.deltaTime * 5;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            GameObject.Find(KlasaGracza.Nick).transform.position -= GameObject.Find(KlasaGracza.Nick).transform.forward * Time.deltaTime * 5;
+        }
+        if (Input.GetKey(KeyCode.W))
+        {
+            // KlasaGracza.Danez = (KlasaInnychGraczy.Gracz.transform.position.z + 5).ToString();
+            GameObject.Find(KlasaGracza.Nick).transform.position += GameObject.Find(KlasaGracza.Nick).transform.forward * Time.deltaTime * 5;
+        }
+
+        KlasaGracza.Danez = GameObject.Find(KlasaGracza.Nick).transform.position.z.ToString();
+        KlasaGracza.Danex = GameObject.Find(KlasaGracza.Nick).transform.position.x.ToString();
+
     }
 
 
@@ -118,7 +129,7 @@ public class poruszanie : MonoBehaviour
     {
         KlasaZmiennych.Polaczenie = true;
         WWWForm form = new WWWForm();
-        form.AddField("Komenda", "UPDATE pozycje SET x ='"+ KlasaGracza.Danex + "',Online='"+ KlasaInnychGraczy.Online + "' WHERE Nick='"+ KlasaGracza.Nick + "'");
+        form.AddField("Komenda", "UPDATE pozycje SET x ='"+ KlasaGracza.Danex + "', z ='" + KlasaGracza.Danez + "', Online='" + KlasaInnychGraczy.Online + "' WHERE Nick='"+ KlasaGracza.Nick + "'");
         using (UnityWebRequest www = UnityWebRequest.Post("https://serwer2131273.home.pl/Calosc.php",form))
         {
             yield return www.SendWebRequest();
@@ -170,10 +181,10 @@ public class poruszanie : MonoBehaviour
                     itm.zDane = KlasaZmiennych.PodzielenieTablicy[4];
                     itm.Online = true;
                     Gracze.Add(itm);
-                    if (GameObject.Find(itm.NickDane) != null && GameObject.Find(itm.NickDane + "Tag") != null)
+                    if (GameObject.Find(itm.NickDane) != null && GameObject.Find(itm.NickDane + "Tag") != null && !GameObject.Find(KlasaGracza.Nick))
                     {
-                        GameObject.Find(itm.NickDane).transform.position = Vector3.Lerp(GameObject.Find(itm.NickDane).transform.position, new Vector3(float.Parse(itm.xDane),0,0), Time.deltaTime);
-                        GameObject.Find(itm.NickDane + "Tag").transform.position = new Vector3(GameObject.Find(itm.NickDane).transform.position.x, GameObject.Find(itm.NickDane + "Tag").transform.position.y, GameObject.Find(itm.NickDane + "Tag").transform.position.z);
+                        GameObject.Find(itm.NickDane).transform.position = Vector3.Lerp(GameObject.Find(itm.NickDane).transform.position, new Vector3(float.Parse(itm.xDane), 0, float.Parse(itm.zDane)), Time.deltaTime);
+                        GameObject.Find(itm.NickDane + "Tag").transform.position = new Vector3(GameObject.Find(itm.NickDane).transform.position.x, GameObject.Find(itm.NickDane).transform.position.y+5, GameObject.Find(itm.NickDane).transform.position.z);
 
                         
                     }

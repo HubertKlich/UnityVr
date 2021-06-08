@@ -14,17 +14,13 @@ public class Ladowanie : MonoBehaviour
     string[] ports = SerialPort.GetPortNames();
     SerialPort arduino;
     bool Polaczenie = false,Czekanie=false, Test1=false,Test2=false;
-    float IloscProcesow=4;
+    float IloscProcesow=2;
+    int IloscWykonanychProcesow = 0;
     // Start is called before the first frame update
     void Start()
     {
-        arduino = new SerialPort(ports[0], 115200);
-        foreach (string port in ports)
-        {
-            Debug.Log(port);
-        }
         
-        arduino.Open();
+
         pasek = GameObject.Find("PasekLadowania");
         napisy = GameObject.Find("napis");
         napisy.GetComponent<TMP_Text>().text="Ładowanie";
@@ -39,20 +35,27 @@ public class Ladowanie : MonoBehaviour
         if (Test1 == false)
         {
             napisy.GetComponent<TMP_Text>().text = "Sprawdzanie Arduino...";
+            
             try
             {
+                ports = SerialPort.GetPortNames();
+                arduino = new SerialPort(ports[0], 115200);
+                arduino.Open();
                 Debug.Log(arduino.ReadLine());
+         
                 if (arduino.ReadLine() == "test")
                 {
                     DodanieDoPaska();
                     Test1 = true;
                 }
+                
             }
             catch (System.Exception)
             {
+                napisy.GetComponent<TMP_Text>().text = "Arduino nie podłączone";
             }
         }
-        if (Test2 == false)
+        if (Test2 == false && Test1==true)
         {
             napisy.GetComponent<TMP_Text>().text = "Połączenie z serwerem...";
             try
@@ -72,10 +75,15 @@ public class Ladowanie : MonoBehaviour
         }
     void DodanieDoPaska()
     {
-        if (pasek.transform.localScale.x < wartoscPaskaMax)
+        if (IloscWykonanychProcesow < IloscProcesow)
+        {
             pasek.transform.localScale = new Vector3(pasek.transform.localScale.x + (1 / IloscProcesow) * wartoscPaskaMax, pasek.transform.localScale.y, pasek.transform.localScale.z);
-        else
+            IloscWykonanychProcesow++;
+        }
+        if(IloscWykonanychProcesow>=IloscProcesow)
             SceneManager.LoadScene(2);
+        
+
     }
 
     IEnumerator GetDate(string Komenda)
@@ -96,7 +104,7 @@ public class Ladowanie : MonoBehaviour
                 {
                     string dane = www.downloadHandler.text;
                     string[] PodzielenieTablicy = dane.Split(char.Parse(" "));
-                    if (PodzielenieTablicy[2] == "1")
+                    if (PodzielenieTablicy[4] == "1")
                     {
                    
                     DodanieDoPaska();
@@ -110,4 +118,6 @@ public class Ladowanie : MonoBehaviour
         }
 
     }
+  
+   
 }
