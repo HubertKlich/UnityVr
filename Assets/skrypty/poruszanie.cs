@@ -59,7 +59,7 @@ public class poruszanie : MonoBehaviour
         KlasaInnychGraczy.NazwaGracza = GameObject.Find("Nazwa");
         KlasaInnychGraczy.Kanwa = GameObject.Find("Canvas");
         TMP_Text Nazwa = KlasaInnychGraczy.NazwaGracza.GetComponent<TMP_Text>();
-
+                                                                         
         if (KlasaGracza.Nick != null)
         {
             Nazwa.text = KlasaGracza.Nick;
@@ -80,7 +80,7 @@ public class poruszanie : MonoBehaviour
         
         Ruch();
 
-        GameObject.Find("Kamera").transform.position = new Vector3(KlasaInnychGraczy.Gracz.transform.position.x, GameObject.Find("Kamera").transform.position.y, KlasaInnychGraczy.Gracz.transform.position.z);
+        GameObject.Find("CameraPivot").transform.position = new Vector3(KlasaInnychGraczy.Gracz.transform.position.x, GameObject.Find("CameraPivot").transform.position.y, KlasaInnychGraczy.Gracz.transform.position.z);
         KlasaInnychGraczy.NazwaGracza.transform.position = new Vector3(KlasaInnychGraczy.Gracz.transform.position.x, KlasaInnychGraczy.NazwaGracza.transform.position.y, KlasaInnychGraczy.NazwaGracza.transform.position.z);
         if (!KlasaZmiennych.Polaczenie)
         {
