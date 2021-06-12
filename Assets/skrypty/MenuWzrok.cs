@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class MenuWzrok : MonoBehaviour
 {
@@ -10,31 +11,42 @@ public class MenuWzrok : MonoBehaviour
     float x = 1f;
     List<GameObject> grafikaKolorowe = new List<GameObject>();
     List<GameObject> dzwiekKolorowe = new List<GameObject>();
+    List<GameObject> wznowienieKolorowe = new List<GameObject>();
     List<string> grafika = new List<string>();
     List<string> dzwiek = new List<string>();
+    List<string> wznowienie = new List<string>();
     List<string> rozdzielczosci = new List<string>();
+    List<string> wylacznik = new List<string>();
     int selected = 0, selectedRozdzielczosc = 0;
-    float selectedGlosnosc = 100;
+    public static float selectedGlosnosc = 100;
     bool kolizjaWyswietlenie = false;
     string nazwaObiektuZaznaczonego="";
     public Texture2D teksturaGrafiki;
     // Start is called before the first frame update
     void Start()
     {
+        
         Menu = GameObject.Find("Menu");
         Rozdzielczosc = GameObject.Find("Rozdzielczosc");
         Wymiary = GameObject.Find("Wymiary");
         grafikaKolorowe.Add(Wymiary);
         dzwiekKolorowe.Add(Wymiary);
+        wznowienieKolorowe.Add(Rozdzielczosc);
         grafika.Add("GRAFIKA");
         grafika.Add("Rozdzielczosc");
-        grafika.Add("1920x1080");
+        grafika.Add("Full Screen");
         dzwiek.Add("DZWIEK");
         dzwiek.Add("Glosnosc");
+        wznowienie.Add("GRA");
+        wznowienie.Add("Wznowienie");
         dzwiek.Add(selectedGlosnosc.ToString()+"%");
         Menu.SetActive(false);
+        rozdzielczosci.Add("Full Screen");
         rozdzielczosci.Add("1920x1080");
         rozdzielczosci.Add("800x600");
+        wylacznik.Add("WYJSCIE");
+        wylacznik.Add("Chcesz wyjsc?");
+
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("ObiektyPodswietlane"))
         {
             go.GetComponent<Renderer>().material.shader = gradient;
@@ -45,7 +57,7 @@ public class MenuWzrok : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //GameObject.Find("Dzwiek").transform.LookAt(GameObject.Find("Main Camera").GetComponent<Transform>());
+       // GameObject.FindGameObjectsWithTag("ObiektyPodswietlane").transform.LookAt(GameObject.Find("Main Camera").GetComponent<Transform>());
         if (kolizjaWyswietlenie)
         {
             if (Input.GetAxis("Mouse ScrollWheel") > 0f)
@@ -79,8 +91,7 @@ public class MenuWzrok : MonoBehaviour
                     {
                         selectedRozdzielczosc = 0;
                     }
-                    grafika[2] = rozdzielczosci[selectedRozdzielczosc];
-                    grafikaKolorowe[selected].GetComponent<TMP_Text>().text = rozdzielczosci[selectedRozdzielczosc];
+                    grafikaSet();
                 }
                 if (nazwaObiektuZaznaczonego == "Dzwiek")
                 {
@@ -91,7 +102,15 @@ public class MenuWzrok : MonoBehaviour
                     }
                     dzwiek[2] = selectedGlosnosc.ToString()+"%";
                     grafikaKolorowe[selected].GetComponent<TMP_Text>().text = selectedGlosnosc.ToString() + "%";
-                    GameObject.Find("Audio Source").GetComponent<AudioSource>().volume = selectedGlosnosc / 100;
+
+                }
+                if (nazwaObiektuZaznaczonego == "Wznowienie")
+                {
+                    SceneManager.LoadScene(2);
+                }
+                if (nazwaObiektuZaznaczonego == "Wylacznik")
+                {
+                    Application.Quit();
                 }
             }
             if (Input.GetMouseButtonDown(1))
@@ -103,8 +122,7 @@ public class MenuWzrok : MonoBehaviour
                     {
                         selectedRozdzielczosc = rozdzielczosci.Count - 1;
                     }
-                    grafika[2] = rozdzielczosci[selectedRozdzielczosc];
-                    grafikaKolorowe[selected].GetComponent<TMP_Text>().text = rozdzielczosci[selectedRozdzielczosc];
+                    grafikaSet();
                 }
                 if (nazwaObiektuZaznaczonego == "Dzwiek")
                 {
@@ -132,15 +150,48 @@ public class MenuWzrok : MonoBehaviour
             select.GetComponent<TMP_Text>().faceColor = Color.red;
             if (target.name == "Grafika")
             {
+                
                 Menu.GetComponent<TMP_Text>().text = grafika[0];
                 Rozdzielczosc.GetComponent<TMP_Text>().text = grafika[1];
                 Wymiary.GetComponent<TMP_Text>().text = grafika[2];
+                for (int i = 0; i < rozdzielczosci.Count; i++)
+                {
+                    if (Screen.fullScreen == false)
+                    {
+                        if (Screen.width.ToString() + "x" + Screen.height.ToString() == rozdzielczosci[i])
+                        {
+                            Wymiary.GetComponent<TMP_Text>().text = rozdzielczosci[i];
+                        }
+                    }
+                    else
+                    {
+                        Wymiary.GetComponent<TMP_Text>().text = rozdzielczosci[0];
+                    }
+                }
             }
             if (target.name == "Dzwiek")
             {
                 Menu.GetComponent<TMP_Text>().text = dzwiek[0];
                 Rozdzielczosc.GetComponent<TMP_Text>().text = dzwiek[1];
                 Wymiary.GetComponent<TMP_Text>().text = dzwiek[2];
+            }
+            if (target.name == "Wznowienie")
+            {
+                Menu.GetComponent<TMP_Text>().text = wznowienie[0];
+                Rozdzielczosc.GetComponent<TMP_Text>().text = wznowienie[1];
+                Rozdzielczosc.GetComponent<TMP_Text>().faceColor = Color.red;
+                Wymiary.GetComponent<TMP_Text>().text = "";
+            }
+            else if (target.name == "Wylacznik")
+            {
+                Menu.GetComponent<TMP_Text>().text = wylacznik[0];
+                Rozdzielczosc.GetComponent<TMP_Text>().text = wylacznik[1];
+                Rozdzielczosc.GetComponent<TMP_Text>().faceColor = Color.red;
+                Wymiary.GetComponent<TMP_Text>().text = "";
+            }
+            else
+            {
+                Rozdzielczosc.GetComponent<TMP_Text>().faceColor = Color.white;
             }
 
         }
@@ -189,5 +240,19 @@ public class MenuWzrok : MonoBehaviour
 
 
     }
-
+           void grafikaSet()
+    {
+        
+grafika[2] = rozdzielczosci[selectedRozdzielczosc];
+                    if (rozdzielczosci[selectedRozdzielczosc] != "Full Screen")
+                    {
+                        Screen.SetResolution(int.Parse(rozdzielczosci[selectedRozdzielczosc].Split('x')[0]), int.Parse(rozdzielczosci[selectedRozdzielczosc].Split('x')[1]), false);
+                    }
+                    else
+                    {
+                        Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
+                    }
+                    Cursor.lockState = CursorLockMode.Locked;
+                    grafikaKolorowe[selected].GetComponent<TMP_Text>().text = rozdzielczosci[selectedRozdzielczosc];
+    }
 }

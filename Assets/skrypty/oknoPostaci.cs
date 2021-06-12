@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class oknoPostaci : MonoBehaviour
 {
@@ -10,18 +11,25 @@ public class oknoPostaci : MonoBehaviour
     private TMP_Text Poziom;
     private Camera Kamera;
     int exp = 0,level=0;
+    public RectTransform m_parent;
+    public Camera m_uiCamera;
+    public RectTransform m_image;
+    public List<Image> Images;                                       
     void Start()
     {
+        Debug.Log(Screen.width + " " + Screen.height);
+        Vector2 anchoredPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(m_parent, new Vector3(Screen.width/ 15, Screen.height-Screen.width / 15, 1.0f), m_uiCamera, out anchoredPos);
+        m_image.anchoredPosition = anchoredPos;
         Kamera = GameObject.Find("Kamera").GetComponent<Camera>();
         Poziom = GameObject.Find("Poziom").GetComponent<TMP_Text>();
-        
 
 
-        for (int i = 0; i < 32; i++)
+        for (int i = 0; i < 36; i++)
         {
-            
-            GameObject.Find("Doswiadczenie (" + i + ")").GetComponent<Renderer>().enabled = false;
-        }          
+
+            Images[i].enabled = false;
+        }
 
 
     }
@@ -29,23 +37,23 @@ public class oknoPostaci : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
         if (Input.GetKey(KeyCode.P) && level<100)
         {
 
-            GameObject.Find("Doswiadczenie (" + exp + ")").GetComponent<Renderer>().enabled = true;
+            Images[exp].enabled = true;
             exp++;
-            if (exp > 31)
+            if (exp > 35)
             {
                 level++;
                
                 
                 if (level<100)
                 {
-                    for (int i = 0; i < 32; i++)
+                    for (int i = 0; i < 36; i++)
                     {
 
-                        GameObject.Find("Doswiadczenie (" + i + ")").GetComponent<Renderer>().enabled = false;
+                        Images[i].enabled = false;
 
                     }
                     exp = 0;

@@ -24,7 +24,14 @@ public class MenuSkrypt : MonoBehaviour
     {
         yaw += speedH * Input.GetAxis("Mouse X") * Time.timeScale;
         pitch -= speedV * Input.GetAxis("Mouse Y") * Time.timeScale;
-
+        if (pitch > 90)
+        {
+            pitch = 90;
+        }
+        if (pitch < -90)
+        {
+            pitch = -90;
+        }
         transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
 
 
