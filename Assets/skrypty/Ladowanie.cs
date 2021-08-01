@@ -16,10 +16,15 @@ public class Ladowanie : MonoBehaviour
     bool Polaczenie = false,Czekanie=false, Test1=false,Test2=false;
     float IloscProcesow=2;
     int IloscWykonanychProcesow = 0;
+    public RectTransform m_parent;
+    public Camera m_uiCamera;
+    public RectTransform m_image;
     // Start is called before the first frame update
     void Start()
     {
-        
+        Vector2 anchoredPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(m_parent, new Vector3(Screen.width / 2, Screen.height/5, 1.0f), m_uiCamera, out anchoredPos);
+        m_image.anchoredPosition = anchoredPos;
 
         pasek = GameObject.Find("PasekLadowania");
         napisy = GameObject.Find("napis");

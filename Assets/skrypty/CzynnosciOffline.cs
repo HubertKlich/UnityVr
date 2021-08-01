@@ -25,7 +25,7 @@ public class CzynnosciOffline : MonoBehaviour
         if (pitch < pitchMin)
             pitch = pitchMin;
         if (pitch > pitchMax)
-            pitch = pitchMax;
+            pitch = pitchMax;                                                     
 
         transform.eulerAngles = new Vector3(pitch, GameObject.Find("CameraPivot").transform.eulerAngles.y, 0.0f);
         GameObject.Find("CameraPivot").transform.eulerAngles = new Vector3(0.0f, yaw, 0.0f);

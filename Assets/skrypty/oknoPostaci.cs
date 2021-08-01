@@ -17,7 +17,6 @@ public class oknoPostaci : MonoBehaviour
     public List<Image> Images;                                       
     void Start()
     {
-        Debug.Log(Screen.width + " " + Screen.height);
         Vector2 anchoredPos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(m_parent, new Vector3(Screen.width/ 15, Screen.height-Screen.width / 15, 1.0f), m_uiCamera, out anchoredPos);
         m_image.anchoredPosition = anchoredPos;

@@ -69,7 +69,7 @@ public class poruszanie : MonoBehaviour
             KlasaInnychGraczy.Gracz.transform.position = new Vector3(float.Parse(KlasaGracza.Danex), 0, float.Parse(KlasaGracza.Danez));
             
         }
-      
+        GameObject.Find(KlasaGracza.Nick + "Tag").GetComponent<TMP_Text>().enabled = false;
        // GameObject.Find("Kamera").transform.SetParent(Gracz.GetComponent<Transform>());
     }
 
