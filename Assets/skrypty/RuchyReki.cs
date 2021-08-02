@@ -25,11 +25,12 @@ public class RuchyReki : MonoBehaviour
     float[] zgieciaMIN = new float[5];
     float[] zgieciaMAX = new float[5];
     string[] hex = new string[9];
-    GameObject kalibracja;
+    GameObject kalibracja,kalibText;
     SerialPort arduino;
     void Start()
     {
         kalibracja = GameObject.Find("kalibracja");
+        kalibText = GameObject.Find("KalibracjaTekst");
         try
         {
             ports = SerialPort.GetPortNames();
@@ -68,6 +69,7 @@ public class RuchyReki : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
 
         }
+        kalibText.GetComponent<TextMeshProUGUI>().text="Wcisnij \"P\"\n"+ (-Euler[2] * (float)(180 / Math.PI) - offsetX )+ " " +(-Euler[1] * (float)(180 / Math.PI) - offsetY )+ " "+(-Euler[0] * (float)(180 / Math.PI) - offsetZ);
         if (arduino.IsOpen)
           {
                                                       
@@ -146,9 +148,10 @@ public class RuchyReki : MonoBehaviour
 
                 }
            //     Debug.Log(zgieciaMIN[0] + " " + zgieciaMAX[0] + " " + zgieciaMIN[1] + " " + zgieciaMAX[1] + " " + zgieciaMIN[2] + " " + zgieciaMAX[2] + " " + zgieciaMIN[3] + " " + zgieciaMAX[3] + " " + zgieciaMIN[4] + " " + zgieciaMAX[4]);
-                GameObject.Find("RightHand").transform.localRotation = Quaternion.Euler(-Euler[2] * (float)(180 / Math.PI)-offsetX, -Euler[1] * (float)(180 / Math.PI)-offsetY, -Euler[0] * (float)(180 / Math.PI)-offsetZ);
+                //GameObject.Find("RightHand").transform.localRotation = Quaternion.Euler(-Euler[2] * (float)(180 / Math.PI)-offsetX, -Euler[1] * (float)(180 / Math.PI)-offsetY, -Euler[0] * (float)(180 / Math.PI)-offsetZ);
+                GameObject.Find("RightHand").transform.localRotation = Quaternion.Euler(Euler[1] * (float)(180 / Math.PI) - offsetX, -Euler[2] * (float)(180 / Math.PI) - offsetY+60, 0);
 
-              //  Debug.Log(Euler[0]+" "+ Euler[1]+" "+Euler[1] * (float)(180 / Math.PI) + " "+ Euler[2] * (float)(180 / Math.PI));
+                //  Debug.Log(Euler[0]+" "+ Euler[1]+" "+Euler[1] * (float)(180 / Math.PI) + " "+ Euler[2] * (float)(180 / Math.PI));
 
 
             }
